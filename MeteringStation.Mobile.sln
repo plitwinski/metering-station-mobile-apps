@@ -1,0 +1,33 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.136
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MeteringStation.Mobile.Android", "MeteringStation.Mobile\MeteringStation.Mobile.Android\MeteringStation.Mobile.Android.csproj", "{D2C5DF5E-6700-4AD6-9330-29A8B7264823}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MeteringStation.Mobile", "MeteringStation.Mobile\MeteringStation.Mobile\MeteringStation.Mobile.csproj", "{738CB071-CB9D-456B-856E-04CBBFBBA1B5}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D2C5DF5E-6700-4AD6-9330-29A8B7264823}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D2C5DF5E-6700-4AD6-9330-29A8B7264823}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D2C5DF5E-6700-4AD6-9330-29A8B7264823}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{D2C5DF5E-6700-4AD6-9330-29A8B7264823}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D2C5DF5E-6700-4AD6-9330-29A8B7264823}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D2C5DF5E-6700-4AD6-9330-29A8B7264823}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{738CB071-CB9D-456B-856E-04CBBFBBA1B5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{738CB071-CB9D-456B-856E-04CBBFBBA1B5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{738CB071-CB9D-456B-856E-04CBBFBBA1B5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{738CB071-CB9D-456B-856E-04CBBFBBA1B5}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {DB67FFE1-FA64-4DE6-B75D-3B37212D16AB}
+	EndGlobalSection
+EndGlobal

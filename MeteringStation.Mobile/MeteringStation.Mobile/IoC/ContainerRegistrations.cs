@@ -1,14 +1,31 @@
-﻿using MeteringStation.Mobile.Pages;
+﻿using Autofac;
+using MeteringStation.Mobile.Messaging;
+using MeteringStation.Mobile.Pages;
 using MeteringStation.Mobile.Services;
+using MeteringStation.Mobile.ViewModels;
+using System;
+using System.Net.Http;
 using Xamarin.Forms;
 
 namespace MeteringStation.Mobile.IoC
 {
     internal static class ContainerRegistrations
     {
-        public static void Register()
+        public static IContainer Create()
         {
-            DependencyService.Register<MeteringStationDetector>();
+            var builder = new ContainerBuilder();
+
+            builder.Register(_ => new HttpClient()
+            {
+                Timeout = TimeSpan.FromSeconds(10)
+            }).AsSelf().SingleInstance();
+            builder.RegisterType<EventAggregator>().As<IEventAggregator>().SingleInstance();
+            builder.RegisterType<MeteringStationDetector>().AsSelf().SingleInstance();
+            builder.RegisterType<MetersPage>().AsSelf();
+            builder.RegisterType<MetersViewModel>().AsSelf();
+            
+
+            return builder.Build();
         }
     }
 }

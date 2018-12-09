@@ -1,10 +1,10 @@
 ﻿using System.Net;
 
-namespace MeteringStation.Mobile.Services.Models
+namespace MeteringStation.Mobile.Events
 {
-    public class MeteringStationDevice
+    public class DeviceDetectedEvent
     {
-        public MeteringStationDevice(string id, IPAddress ip)
+        public DeviceDetectedEvent(string id, IPAddress ip)
         {
             Id = id;
             Ip = ip;

@@ -1,8 +1,8 @@
-﻿using MeteringStation.Mobile.IoC;
+﻿using Autofac;
+using MeteringStation.Mobile.IoC;
 using MeteringStation.Mobile.Pages;
 using MeteringStation.Mobile.Services;
-using MeteringStation.Mobile.ViewModels;
-using System;
+using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -11,17 +11,19 @@ namespace MeteringStation.Mobile
 {
     public partial class App : Application
     {
+        private readonly MeteringStationDetector meteringStationDetector;
+
         public App()
         {
             InitializeComponent();
-            ContainerRegistrations.Register();
-            var viewModel = new MetersViewModel(DependencyService.Resolve<MeteringStationDetector>());
-            MainPage = new MetersPage(viewModel);
+            var container = ContainerRegistrations.Create();
+            meteringStationDetector = container.Resolve<MeteringStationDetector>();
+            MainPage = container.Resolve<MetersPage>();
         }
 
-        protected override void OnStart()
+        protected override async void OnStart()
         {
-            StartMeteringStationsDetection();
+            await StartMeteringStationsDetection();
             // Handle when your app starts
         }
 
@@ -30,16 +32,15 @@ namespace MeteringStation.Mobile
             // Handle when your app sleeps
         }
 
-        protected override void OnResume()
+        protected override async void OnResume()
         {
-            StartMeteringStationsDetection();
+            await StartMeteringStationsDetection();
             // Handle when your app resumes
         }
 
-        private void StartMeteringStationsDetection()
+        private async Task StartMeteringStationsDetection()
         {
-            var detector = DependencyService.Resolve<MeteringStationDetector>();
-            detector.StartDiscovery();
+            await meteringStationDetector.StartDiscoveryAsync();
         }
     }
 }

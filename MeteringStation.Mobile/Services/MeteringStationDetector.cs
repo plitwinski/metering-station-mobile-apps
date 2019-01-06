@@ -1,5 +1,6 @@
 ﻿using Autofac;
 using MeteringStation.Mobile.Events;
+using MeteringStation.Mobile.Extensions;
 using MeteringStation.Mobile.Messaging;
 using MeteringStation.Mobile.Services.Communication;
 using MeteringStation.Mobile.Services.Dtos;
@@ -16,8 +17,6 @@ namespace MeteringStation.Mobile.Services
     public class MeteringStationDetector : IMeteringStationDetector
     {
         private const string DiscoverySenderId = "bb407f65-e945-49b7-849b-925cee163de5";
-        private const string MessageEncryptionKey = "287de7751edd4b3d9897d2f2ebc7e869";
-        private const string MessageIV = "a3b334557cfe4613";
         private const int Port = 8999;
 
         private readonly IEventAggregator eventAggregator;
@@ -53,32 +52,10 @@ namespace MeteringStation.Mobile.Services
 
         private void OnDeviceDetected(IPEndPoint ip, string encryptedResponse)
         {
-            var responseMessage = Decrypt(encryptedResponse);
+            var responseMessage = encryptedResponse.Decrypt();
             var response = JsonConvert.DeserializeObject<MeteringStationResponse>(responseMessage);
             eventAggregator
                 .Publish(new DeviceDetectedEvent(response.ClientId, ip.Address));
-        }
-
-        private static string Decrypt(string data)
-        {
-            byte[] key = Encoding.ASCII.GetBytes(MessageEncryptionKey);
-            byte[] iv = Encoding.ASCII.GetBytes(MessageIV);
-
-            using (var rijndaelManaged =
-                    new RijndaelManaged { Key = key, IV = iv, Mode = CipherMode.CBC })
-            {
-                rijndaelManaged.BlockSize = 128;
-                rijndaelManaged.KeySize = 256;
-                using (var memoryStream =
-                       new MemoryStream(Convert.FromBase64String(data)))
-                using (var cryptoStream =
-                       new CryptoStream(memoryStream,
-                           rijndaelManaged.CreateDecryptor(key, iv),
-                           CryptoStreamMode.Read))
-                {
-                    return new StreamReader(cryptoStream).ReadToEnd();
-                }
-            }
         }
     }
 }

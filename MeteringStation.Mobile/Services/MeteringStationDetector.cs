@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace MeteringStation.Mobile.Services
 {
-    public class MeteringStationDetector
+    public class MeteringStationDetector : IMeteringStationDetector
     {
         private const string DiscoverySenderId = "bb407f65-e945-49b7-849b-925cee163de5";
         private const string MessageEncryptionKey = "287de7751edd4b3d9897d2f2ebc7e869";

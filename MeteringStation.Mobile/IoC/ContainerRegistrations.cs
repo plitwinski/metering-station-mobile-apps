@@ -11,7 +11,7 @@ namespace MeteringStation.Mobile.IoC
 {
     internal static class ContainerRegistrations
     {
-        public static IContainer Create()
+        public static ContainerBuilder Create()
         {
             var builder = new ContainerBuilder();
 
@@ -20,12 +20,12 @@ namespace MeteringStation.Mobile.IoC
                 Timeout = TimeSpan.FromSeconds(10)
             }).AsSelf().SingleInstance();
             builder.RegisterType<EventAggregator>().As<IEventAggregator>().SingleInstance();
-            builder.RegisterType<MeteringStationDetector>().AsSelf().SingleInstance();
+            builder.RegisterType<MeteringStationDetector>().As<IMeteringStationDetector>().SingleInstance();
             builder.RegisterType<MetersPage>().AsSelf();
             builder.RegisterType<MetersViewModel>().AsSelf();
             
 
-            return builder.Build();
+            return builder;
         }
     }
 }

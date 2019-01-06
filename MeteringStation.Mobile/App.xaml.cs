@@ -11,15 +11,19 @@ namespace MeteringStation.Mobile
 {
     public partial class App : Application
     {
-        private readonly MeteringStationDetector meteringStationDetector;
+        private readonly IMeteringStationDetector meteringStationDetector;
 
         public App()
         {
             InitializeComponent();
-            var container = ContainerRegistrations.Create();
-            meteringStationDetector = container.Resolve<MeteringStationDetector>();
+
+            var container = GetContainerBuilder().Build();
+            meteringStationDetector = container.Resolve<IMeteringStationDetector>();
             MainPage = container.Resolve<MetersPage>();
         }
+
+        protected virtual ContainerBuilder GetContainerBuilder()
+            => ContainerRegistrations.Create();
 
         protected override async void OnStart()
         {

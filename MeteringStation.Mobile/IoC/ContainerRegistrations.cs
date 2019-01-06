@@ -2,6 +2,7 @@
 using MeteringStation.Mobile.Messaging;
 using MeteringStation.Mobile.Pages;
 using MeteringStation.Mobile.Services;
+using MeteringStation.Mobile.Services.Communication;
 using MeteringStation.Mobile.ViewModels;
 using System;
 using System.Net.Http;
@@ -19,11 +20,12 @@ namespace MeteringStation.Mobile.IoC
             {
                 Timeout = TimeSpan.FromSeconds(10)
             }).AsSelf().SingleInstance();
+
             builder.RegisterType<EventAggregator>().As<IEventAggregator>().SingleInstance();
             builder.RegisterType<MeteringStationDetector>().As<IMeteringStationDetector>().SingleInstance();
             builder.RegisterType<MetersPage>().AsSelf();
             builder.RegisterType<MetersViewModel>().AsSelf();
-            
+            builder.RegisterType<UdpBroadcaster>().As<IBroadcaster>();
 
             return builder;
         }

@@ -19,8 +19,8 @@ namespace MeteringStation.Mobile.Tests
         [Test]
         public void WhenAppInitiated_MetersAppLoaded()
         {
+            // make sure App can be instantiated AKA all dependencies can be resolved.
             var app = new AppFixture()
-                .OverrideWith(new MeteringStationDetectorBuilder().Build())
                 .Create();
 
             Assert.IsInstanceOf<MetersPage>(app.MainPage);

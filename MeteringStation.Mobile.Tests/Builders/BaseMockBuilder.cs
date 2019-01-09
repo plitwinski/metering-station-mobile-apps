@@ -4,9 +4,9 @@ namespace MeteringStation.Mobile.Tests.Builders
 {
     abstract class BaseMockBuilder<T> where T : class
     {
-        public BaseMockBuilder()
+        public BaseMockBuilder(bool callBase = false)
         {
-            Mock = new Mock<T>();
+            Mock = new Mock<T>() { CallBase = callBase };
         }
 
         public Mock<T> Mock { get; }

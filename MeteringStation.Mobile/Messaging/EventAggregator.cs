@@ -14,6 +14,7 @@ namespace MeteringStation.Mobile.Messaging
             _subscribers.AddOrUpdate(typeof(T),
                 k => new List<Action<object>>() { e => action((T)e) },
                 (_, events) => {
+                    events.Clear();
                     events.Add(e => action((T)e));
                     return events;
                 });

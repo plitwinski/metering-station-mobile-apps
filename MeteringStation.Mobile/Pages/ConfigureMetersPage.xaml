@@ -1,0 +1,50 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:controls="clr-namespace:Refractored.XamForms.PullToRefresh;assembly=Refractored.XamForms.PullToRefresh"
+             xmlns:behaviors="clr-namespace:Behaviors;assembly=Behaviors"
+             x:Class="MeteringStation.Mobile.Pages.ConfigureMetersPage" 
+             x:Name="configPage"
+             Title="Configure">
+    <ContentPage.Behaviors>
+        <behaviors:EventHandlerBehavior EventName="Appearing">
+            <behaviors:InvokeCommandAction Command="{Binding Load}" />
+        </behaviors:EventHandlerBehavior>
+    </ContentPage.Behaviors>
+    <ContentPage.Content>
+        <StackLayout>
+            <controls:PullToRefreshLayout
+              IsPullToRefreshEnabled="True"
+              RefreshCommand="{Binding Refresh}"
+              IsRefreshing="{Binding IsLoading}"
+              RefreshColor="Blue">
+                <ListView CachingStrategy="RecycleElement" x:Name="p_lstView" RowHeight="175" SeparatorColor="DodgerBlue" ItemsSource="{Binding Devices}">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <ViewCell>
+                                <StackLayout Orientation="Vertical" HorizontalOptions="Fill" Margin="15,0,15,0">
+                                    <StackLayout Orientation="Horizontal">
+                                        <Label x:Name="p_lblDeviceId" Text="Device Id:" Font="Bold" Margin="0,10,0,0"/>
+                                        <Label x:Name="p_txtDeviceId" Text="{Binding Id}" Margin="0,10,0,0"/>
+                                    </StackLayout>
+                                    <StackLayout Orientation="Horizontal">
+                                        <Label x:Name="p_lblDeviceIp" Text="Device IP:" Font="Bold" Margin="0,10,0,0"/>
+                                        <Label x:Name="p_txtDeviceIp" Text="{Binding Ip}" Margin="0,10,0,0"/>
+                                    </StackLayout>
+                                    <StackLayout Orientation="Horizontal">
+                                        <Label x:Name="p_lblDeviceStatus" Text="Device Status:" Font="Bold" Margin="0,10,0,0"/>
+                                        <Label x:Name="p_txtDeviceStatus" Text="{Binding Status}" Margin="0,10,0,0"/>
+                                    </StackLayout>
+                                    <StackLayout Orientation="Horizontal">
+                                        <Button x:Name="p_btnDeviceAdd" Text="Add" Command="{Binding Source={x:Reference Name=configPage}, Path=BindingContext.AddDevice}" CommandParameter="{Binding}" />
+                                        <Button x:Name="p_btnDeviceRemove" Text="Remove" Command="{Binding Source={x:Reference Name=configPage}, Path=BindingContext.RemoveDevice}" CommandParameter="{Binding}" />
+                                    </StackLayout>
+                                </StackLayout>
+                            </ViewCell>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </controls:PullToRefreshLayout>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

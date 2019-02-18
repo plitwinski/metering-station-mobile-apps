@@ -1,5 +1,8 @@
-﻿using MeteringStation.Mobile.Events;
+﻿using MeteringStation.Mobile.DataAccess.Databases;
+using MeteringStation.Mobile.DataAccess.Models;
+using MeteringStation.Mobile.Events;
 using MeteringStation.Mobile.Messaging;
+using MeteringStation.Mobile.Pages.Services;
 using MeteringStation.Mobile.ViewModels.Dtos;
 using MeteringStation.Mobile.ViewModels.Models;
 using Newtonsoft.Json;
@@ -17,8 +20,8 @@ namespace MeteringStation.Mobile.ViewModels
 {
     public class MetersViewModel : INotifyPropertyChanged
     {
+        private readonly IMetersDatabase metersDatabase;
         private readonly HttpClient httpClient;
-        private List<DeviceDetectedEvent> registeredDevices;
 
         #region INotifyPropertyChanged
 
@@ -58,53 +61,46 @@ namespace MeteringStation.Mobile.ViewModels
             }
         }
 
-        public ICommand Refresh { get; protected set; }
+        public ICommand Refresh { get; }
+        public ICommand Configure { get; }
 
         #endregion
 
-        public MetersViewModel(IEventAggregator eventAggregator, HttpClient httpClient)
+        public MetersViewModel(
+            IMetersDatabase metersDatabase,
+            HttpClient httpClient, 
+            INavigationService navigationService)
         {
-            registeredDevices = new List<DeviceDetectedEvent>();
+            this.metersDatabase = metersDatabase;
             this.httpClient = httpClient;
 
-            eventAggregator.Subscribe<DetectionStartedEvent>(_ => IsLoading = true);
-            eventAggregator.Subscribe<DetectionFinishedEvent>(_ => IsLoading = false);
-            eventAggregator.Subscribe<DeviceDetectedEvent>(async e => await HandleDevice(e));
-
-            Refresh = new Command(async () => await RefreshDevices(registeredDevices));
+            Refresh = new Command(async () => await RefreshDevices());
+            Configure = new Command(async () => await navigationService.NavigateToConfigureMetersPageAsync());
         }
 
-        private async Task HandleDevice(DeviceDetectedEvent deviceEvent)
-        {
-            var result = await DownloadDeviceDataAsync(deviceEvent);
-            
-            if(Readings.All(x => x.ClientId != deviceEvent.Id))
-            {
-                result.ToList().ForEach(i => Readings.Add(i));
-                registeredDevices.Add(deviceEvent);
-            }
-        }
-
-        private async Task RefreshDevices(IEnumerable<DeviceDetectedEvent> deviceEvents)
+        private async Task RefreshDevices()
         {
             IsLoading = true;
 
-            var results = deviceEvents.Select(d => DownloadDeviceDataAsync(d)).ToArray();
+            var registeredDevices = (await metersDatabase.GetMetersAsync()).ToList();
+
+            var results = registeredDevices.Select(d => DownloadDeviceDataAsync(d)).ToArray();
             await Task.WhenAll(results);
             Readings.Clear();
 
             results
-            .SelectMany(p => p.Result).ToList()
-            .ForEach(i => Readings.Add(i));
+                .SelectMany(p => p.Result)
+                .ToList()
+                .ForEach(i => Readings.Add(i));
 
             IsLoading = false;
         }
 
-        private async Task<IEnumerable<Reading>> DownloadDeviceDataAsync(DeviceDetectedEvent deviceDetected)
+        private async Task<IEnumerable<Reading>> DownloadDeviceDataAsync(RegisteredMeter registeredMeter)
         {
             try
             {
-                using (var response = await httpClient.GetAsync($"http://{deviceDetected.Ip}:8080/v1/readings"))
+                using (var response = await httpClient.GetAsync($"http://{registeredMeter.DeviceIp}:8080/v1/readings"))
                 {
                     if (!response.IsSuccessStatusCode)
                         return Enumerable.Empty<Reading>();
@@ -116,14 +112,23 @@ namespace MeteringStation.Mobile.ViewModels
                         PM25 = p.PM25,
                         PM10 = p.PM10,
                         DeviceName = p.DeviceName,
-                        ClientId = deviceDetected.Id
+                        ClientId = registeredMeter.DeviceId
                     });
                 }
             }
             catch(Exception)
             {
-                //TODO display error on the UI???
-                return Enumerable.Empty<Reading>();
+                // TODO display toast error or something
+                return new[]
+                {
+                    new Reading()
+                    {
+                        PM25 = "-2",
+                        PM10 = "-2",
+                        DeviceName = "Error",
+                        ClientId = registeredMeter.DeviceId
+                    }
+                };
             }
         }
     }

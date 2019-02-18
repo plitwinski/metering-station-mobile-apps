@@ -2,41 +2,51 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:controls="clr-namespace:Refractored.XamForms.PullToRefresh;assembly=Refractored.XamForms.PullToRefresh"
-             x:Class="MeteringStation.Mobile.Pages.MetersPage">
+             xmlns:behaviors="clr-namespace:Behaviors;assembly=Behaviors"
+             x:Class="MeteringStation.Mobile.Pages.MetersPage"
+             Title="List">
+    <ContentPage.Behaviors>
+        <behaviors:EventHandlerBehavior EventName="Appearing">
+            <behaviors:InvokeCommandAction Command="{Binding Refresh}" />
+        </behaviors:EventHandlerBehavior>
+    </ContentPage.Behaviors>
     <ContentPage.Content>
-        <controls:PullToRefreshLayout
-          IsPullToRefreshEnabled="True"
-          RefreshCommand="{Binding Refresh}"
-          IsRefreshing="{Binding IsLoading}"
-          RefreshColor="Blue">
-            <ScrollView HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
-                <ListView x:Name="p_lstView" RowHeight="160" SeparatorColor="DodgerBlue" ItemsSource="{Binding Readings}">
-                    <ListView.ItemTemplate>
-                        <DataTemplate>
-                            <ViewCell>
-                                <StackLayout Orientation="Vertical" HorizontalOptions="Fill" Margin="15,0,15,0">
-                                    <StackLayout Orientation="Horizontal">
-                                        <Label x:Name="p_lblName" Text="Name:" Font="Bold" Margin="0,10,0,0"/>
-                                        <Label x:Name="p_txtName" Text="{Binding DeviceName}" Margin="0,10,0,0"/>
+        <StackLayout>
+            <Button x:Name="btnConfigure" Command="{Binding Configure}" Text="Configure" />
+            <controls:PullToRefreshLayout
+              IsPullToRefreshEnabled="True"
+              RefreshCommand="{Binding Refresh}"
+              IsRefreshing="{Binding IsLoading}"
+              RefreshColor="Blue">
+                <ScrollView HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+                    <ListView CachingStrategy="RecycleElement" x:Name="p_lstView" RowHeight="160" SeparatorColor="DodgerBlue" ItemsSource="{Binding Readings}">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <ViewCell>
+                                    <StackLayout Orientation="Vertical" HorizontalOptions="Fill" Margin="15,0,15,0">
+                                        <StackLayout Orientation="Horizontal">
+                                            <Label x:Name="p_lblName" Text="Name:" Font="Bold" Margin="0,10,0,0"/>
+                                            <Label x:Name="p_txtName" Text="{Binding DeviceName}" Margin="0,10,0,0"/>
+                                        </StackLayout>
+                                        <StackLayout Orientation="Horizontal">
+                                            <Label x:Name="p_lblPM25" Text="PM 2.5:" Font="Bold" Margin="0,10,0,0"/>
+                                            <Label x:Name="p_txtPM25" Text="{Binding PM25}" Margin="0,10,0,0"/>
+                                        </StackLayout>
+                                        <StackLayout Orientation="Horizontal">
+                                            <Label x:Name="p_lblPM10" Text="PM 10:" Font="Bold" Margin="0,10,0,0"/>
+                                            <Label x:Name="p_txtPM10" Text="{Binding PM10}" Margin="0,10,0,0"/>
+                                        </StackLayout>
+                                        <StackLayout Orientation="Horizontal">
+                                            <Label x:Name="p_lblClientId" Text="Device Id:" Font="Bold" Margin="0,10,0,0"/>
+                                            <Label x:Name="p_txtClientId" Text="{Binding ClientId}" Margin="0,10,0,0"/>
+                                        </StackLayout>
                                     </StackLayout>
-                                    <StackLayout Orientation="Horizontal">
-                                        <Label x:Name="p_lblPM25" Text="PM 2.5:" Font="Bold" Margin="0,10,0,0"/>
-                                        <Label x:Name="p_txtPM25" Text="{Binding PM25}" Margin="0,10,0,0"/>
-                                    </StackLayout>
-                                    <StackLayout Orientation="Horizontal">
-                                        <Label x:Name="p_lblPM10" Text="PM 10:" Font="Bold" Margin="0,10,0,0"/>
-                                        <Label x:Name="p_txtPM10" Text="{Binding PM10}" Margin="0,10,0,0"/>
-                                    </StackLayout>
-                                    <StackLayout Orientation="Horizontal">
-                                        <Label x:Name="p_lblClientId" Text="Device Id:" Font="Bold" Margin="0,10,0,0"/>
-                                        <Label x:Name="p_txtClientId" Text="{Binding ClientId}" Margin="0,10,0,0"/>
-                                    </StackLayout>
-                                </StackLayout>
-                            </ViewCell>
-                        </DataTemplate>
-                    </ListView.ItemTemplate>
-                </ListView>
-            </ScrollView>
-        </controls:PullToRefreshLayout>
+                                </ViewCell>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </ScrollView>
+            </controls:PullToRefreshLayout>
+        </StackLayout>
     </ContentPage.Content>
 </ContentPage>

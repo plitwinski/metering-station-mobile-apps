@@ -1,4 +1,5 @@
 ﻿using Autofac;
+using MeteringStation.Mobile.DataAccess;
 using MeteringStation.Mobile.Messaging;
 using MeteringStation.Mobile.Pages;
 using MeteringStation.Mobile.Services;
@@ -6,7 +7,6 @@ using MeteringStation.Mobile.Services.Communication;
 using MeteringStation.Mobile.ViewModels;
 using System;
 using System.Net.Http;
-using Xamarin.Forms;
 
 namespace MeteringStation.Mobile.IoC
 {
@@ -23,10 +23,11 @@ namespace MeteringStation.Mobile.IoC
 
             builder.RegisterType<EventAggregator>().As<IEventAggregator>().SingleInstance();
             builder.RegisterType<MeteringStationDetector>().As<IMeteringStationDetector>().SingleInstance();
-            builder.RegisterType<MetersPage>().AsSelf();
-            builder.RegisterType<MetersViewModel>().AsSelf();
             builder.RegisterType<UdpBroadcaster>().As<IBroadcaster>();
 
+            builder.RegisterModule<ViewModelsModule>();
+            builder.RegisterModule<PagesModule>();
+            builder.RegisterModule<DataAccessModule>();
             return builder;
         }
     }

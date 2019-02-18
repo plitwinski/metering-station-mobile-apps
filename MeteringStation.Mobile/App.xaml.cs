@@ -16,10 +16,10 @@ namespace MeteringStation.Mobile
         public App()
         {
             InitializeComponent();
-
+            
             var container = GetContainerBuilder().Build();
             meteringStationDetector = container.Resolve<IMeteringStationDetector>();
-            MainPage = container.Resolve<MetersPage>();
+            MainPage = new NavigationPage(container.Resolve<MetersPage>());
         }
 
         protected virtual ContainerBuilder GetContainerBuilder()
